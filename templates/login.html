@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+
+            background: url('/static/images/medical_ins1.webp') no-repeat center center fixed;
+            background-size: cover;
+
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            backdrop-filter: blur(4px);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background: #28a745;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1e7e34;
+        }
+        .message {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .link {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label for="user_name">User Name</label>
+        <input type="text" id="user_name" name="user_name" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Login</button>
+    </form>
+    <div class="message" id="message"></div>
+    <div class="link">
+        New user? <a href="/register_page">Register here</a>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success' && data.token) {
+                // Store JWT token (not shown on UI)
+                localStorage.setItem('jwt_token', data.token);
+                // Redirect to prediction page route
+                window.location.href = '/prediction';
+            } else {
+                document.getElementById('message').textContent = data.message || 'Invalid Credentials';
+            }
+        } catch (error) {
+            document.getElementById('message').textContent = 'Error while logging in';
+            console.error(error);
+        }
+    });
+</script>
+</body>
+</html>
