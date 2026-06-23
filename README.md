@@ -1,3 +1,4 @@
+
 # 🏥 Medical Insurance Charges Prediction – Flask Web App
 
 A complete Flask-based web application that predicts **medical insurance charges** using a Machine Learning model.
